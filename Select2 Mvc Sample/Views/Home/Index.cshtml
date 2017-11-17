@@ -1,0 +1,115 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <title>Select2 Mvc Project</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <!-- Select2 V 4 CSS -->
+    <link href="/Content/select2.min.css" rel="stylesheet" />
+
+    <style>
+        /* Template For This Project */
+        body {
+            padding-top: 5rem;
+        }
+
+        .starter-template {
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="/">Refresh Homepage</a>
+    </nav>
+
+    <div class="container">
+
+        <div class="starter-template">
+            <h1>Select2 C#.Net Mvc Demo</h1>
+            <p class="lead"></p>
+            <div class="row justify-content-md-center">
+                <div class="col">
+                    <!-- List1 SelectBox -->
+                    <div class="form-group">
+                        <select name="slcList1" id="slcList1" class="form-control">
+                        </select>
+                    </div>
+                    <!-- List1 SelectBox -->
+                </div>
+            </div>
+        </div>
+
+
+    </div><!-- /.container -->
+    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <!-- Include Select2 V 4 -->
+    <script src="/Content/select2.full.min.js"></script>
+    <script src="/Content/i18n/tr.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            //The url we will send our get request to
+            var valueUrl = '@Url.Action("GetValues", "Home")';
+
+            $('#slcList1').select2(
+            {
+                placeholder: 'Enter name',
+                //Does the user have to enter any data before sending the ajax request
+                minimumInputLength: 0,
+                allowClear: true,
+                ajax: {
+                    //How long the user has to pause their typing before sending the next request
+                    delay: 150,
+                    //The url of the json service
+                    url: '@Url.Action("GetValues", "Home")',
+                    dataType: 'json',
+                    async: true,
+                    //Our search term and what page we are on
+                    data: function (params) {
+                        return {
+                            pageSize: 100,
+                            pageNum: params.page || 1,
+                            searchTerm: params.term,
+                            //Value from client side.
+                            countyId: 'vv'
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: $.map(data.Results, function (obj) {
+                                return { id: obj.Id, text: obj.FirstName };
+                            }),
+                            pagination: {
+                                more: (params.page * 100) <= data.Total
+                            }
+                        };
+                    }
+                }
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>
